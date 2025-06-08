@@ -67,19 +67,26 @@
 <h2>🏆 GitHub Trophies</h2>
 <img src="https://github-profile-trophy.vercel.app/?username=HitDrama&theme=dracula&no-frame=false&no-bg=false&margin-w=4" />
 
-<h2>📊 GitHub Stats:</h2>
-<div align="center">
+<h2 align="center">📊 GitHub Stats</h2>
 
-  <!-- Hàng 1: Hai biểu đồ nằm cạnh nhau -->
-  <img src="https://github-readme-stats.vercel.app/api?username=HitDrama&theme=nightowl&hide_border=false&include_all_commits=true&count_private=false" height="200" />
-  <img src="https://nirzak-streak-stats.vercel.app/?user=HitDrama&theme=nightowl&hide_border=false" height="200" />
+<table align="center">
+  <tr>
+    <!-- Hàng 1: Hai biểu đồ cạnh nhau -->
+    <td>
+      <img src="https://github-readme-stats.vercel.app/api?username=HitDrama&theme=nightowl&hide_border=false&include_all_commits=true&count_private=false" height="200" />
+    </td>
+    <td>
+      <img src="https://nirzak-streak-stats.vercel.app/?user=HitDrama&theme=nightowl&hide_border=false" height="200" />
+    </td>
+  </tr>
+  <tr>
+    <!-- Hàng 2: Một biểu đồ chiếm toàn bộ chiều ngang -->
+    <td colspan="2" align="center">
+      <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=HitDrama&theme=nightowl&hide_border=false&include_all_commits=true&count_private=false&layout=compact" height="200" />
+    </td>
+  </tr>
+</table>
 
-  <br/><br/>
-
-  <!-- Hàng 2: Một biểu đồ duy nhất -->
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=HitDrama&theme=nightowl&hide_border=false&include_all_commits=true&count_private=false&layout=compact" height="200" />
-
-</div>
 
 
 <!-- <h2>✍️ Random Dev Quote</h2>
