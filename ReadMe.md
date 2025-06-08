@@ -89,9 +89,9 @@
 
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/HitDrama/Dang-To-Nhan/output/pacman-contribution-graph-dark.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/HitDrama/Dang-To-Nhan/output/pacman-contribution-graph.svg">
-  <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/HitDrama/Dang-To-Nhan/output/pacman-contribution-graph.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/HitDrama/HitDrama/output/pacman-contribution-graph-dark.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/HitDrama/HitDrama/output/pacman-contribution-graph.svg">
+  <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/HitDrama/HitDrama/output/pacman-contribution-graph.svg">
 </picture>
 
 <h2>🔝 Top Contributed Repo</h2>
