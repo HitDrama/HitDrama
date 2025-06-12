@@ -1,6 +1,10 @@
 <img align="right" height="150" src="https://media.giphy.com/media/M9gbBd9nbDrOTu1Mqx/giphy.gif"  />
 
-<h1 align="center">Hello and welcome to my GitHub! 👨‍💻</h1>
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?weight=700&color=F7498B&background=FFFFFF00&lines=Hello+and+welcome+to+my+GitHub!+👨‍💻;Glad+you%27re+here!+🚀;Hope+you+find+something+cool+here+✨" />
+
+</p>
+
 
 <div align="center">
   <a href="https://www.linkedin.com/in/nhan-dang-to-7512b734b/" target="_blank">
@@ -14,15 +18,19 @@
   </a>
 </div>
 
+
 <h2 align="left">👩‍💻 About Me</h2>
 
-<p align="left">
-  I'm Nhan from Vietnam.<br><br>
-  - 🔭 I’m working as a web developer.  <br>
-  - 📚 I'm currently learning more about backend development.  <br>
-  - ⚡ I enjoy gaming and listening to music.  <br>
-  - 🤖 I'm also interested in learning about AI.
+<h3 align="center">A friendly web developer from Vietnam 🇻🇳</h3>
+
+<p align="center">
+  🚀 Currently exploring backend development<br>
+  🤖 Has some curiosity about AI and tech stuff<br>
+  🎮 In free time, enjoys gaming, listening to music, watching movies<br>
+  🐟 Loves peaceful things like keeping fish and chilling at home
 </p>
+
+
 
 <h2 align="left">🛠 Language and tools</h2>
 
