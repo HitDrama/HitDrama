@@ -30,6 +30,24 @@
   🐟 Loves peaceful things like keeping fish and chilling at home
 </p>
 
+---
+
+<details>
+  <summary align="center">
+    <h3 style="display: inline-block; margin: 0;">✨ Ready to Dive Deeper? Click to Explore My Projects! ✨</h3>
+  </summary>
+  <div align="center">
+    <a href="https://github.com/HitDrama/Projects-Of-Nhan" target="_blank">
+        <img src="https://img.shields.io/badge/🚀%20View%20All%20Projects-F7498B?style=for-the-badge&logo=github&logoColor=white" alt="Explore My Projects Button" />
+    </a>
+    <p>Explore my complete collection of projects, meticulously categorized by **AI**, **Web**, and **Backend** development.</p>
+    <a href="https://github.com/HitDrama/Projects-Of-Nhan" target="_blank">
+        <img src="https://img.shields.io/badge/🚀%20View%20All%20Projects-F7498B?style=for-the-badge&logo=github&logoColor=white" alt="Explore My Projects Button" />
+    </a>
+  </div>
+</details>
+
+---
 
 
 <h2 align="left">🛠 Language and tools</h2>
