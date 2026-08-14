@@ -1,0 +1,32 @@
+name: Update profile cards
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/generate-profile-cards.py"
+      - ".github/workflows/update-profile-cards.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile
+        uses: actions/checkout@v4
+
+      - name: Generate dark and light SVG cards
+        env:
+          GITHUB_USERNAME: HitDrama
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/generate-profile-cards.py
+
+      - name: Commit generated cards
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "chore: refresh profile cards"
+          file_pattern: "assets/*.svg"
