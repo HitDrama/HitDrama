@@ -85,7 +85,7 @@ def card_stats(user: dict, repos: list[dict], metrics: dict, theme: str) -> str:
         ("🌊 Contribution streak", f"{metrics.get('current_streak', 0)}d", "#a78bfa"),
         ("✦ Stars earned", stars, "#67e8f9"),
     ]
-    out = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="600" height="300" role="img" aria-labelledby="holo-title holo-desc">
+    out = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 40 480 220" width="600" height="275" role="img" aria-labelledby="holo-title holo-desc">
       <title id="holo-title">GitHub Holographic Profile Stats</title><desc id="holo-desc">Live GitHub stats for {esc(USERNAME)}</desc>
       <defs>
         <linearGradient id="hfp-foil" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#67e8f9"><animate attributeName="stop-color" values="{foil_stops}" dur="10s" repeatCount="indefinite"/></stop><stop offset=".5" stop-color="#f472b6"><animate attributeName="stop-color" values="#f472b6;#fcd34d;#a78bfa;#67e8f9;#f472b6" dur="10s" repeatCount="indefinite"/></stop><stop offset="1" stop-color="#fcd34d"><animate attributeName="stop-color" values="#fcd34d;#a78bfa;#67e8f9;#f472b6;#fcd34d" dur="10s" repeatCount="indefinite"/></stop></linearGradient>

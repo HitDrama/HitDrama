@@ -97,7 +97,7 @@
 
 <h2 align="center">📊 GitHub Stats</h2>
 
-<table align="center" width="100%">
+<table align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td align="center" width="50%">
       <picture>
