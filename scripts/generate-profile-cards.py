@@ -72,47 +72,36 @@ def shell(width: int, height: int, title: str, subtitle: str, theme: str) -> tup
 
 
 def card_stats(user: dict, repos: list[dict], metrics: dict, theme: str) -> str:
-    width, height = 1200, 420
     dark = theme == "dark"
-    stage = "#0a0f1f" if dark else "#f8fafc"
-    panel = "#15192e" if dark else "#ffffff"
-    border = "#1f2540" if dark else "#dbe3ef"
-    ink = "#e2e8f0" if dark else "#172033"
-    muted = "#64748b"
-    green, violet, yellow, cyan = "#4ade80", "#a78bfa", "#fcd34d", "#67e8f9"
-    weeks = metrics.get("weeks", [])
-    week_values = [sum(day.get("contributionCount", 0) for day in week.get("contributionDays", [])) for week in weeks]
-    commits = metrics.get("commits", 0)
-    pull_requests = metrics.get("pull_requests", 0)
-    streak = metrics.get("current_streak", 0)
-    longest = metrics.get("longest_streak", 0)
-    points = week_values[-13:] or [0]
-    max_point = max(points) or 1
-    chart_points = " ".join(f"{18 + i * (1044 / max(len(points) - 1, 1)):.1f},{68 - (value / max_point) * 50:.1f}" for i, value in enumerate(points))
-    chart_area = f"{chart_points} 1062,76 18,76"
-
-    out = [f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="stats-title stats-desc">
-      <title id="stats-title">GitHub Analytics Grid</title><desc id="stats-desc">Live GitHub activity summary for {esc(USERNAME)}</desc>
-      <defs>
-        <linearGradient id="ag-stage" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{stage}"/><stop offset="1" stop-color="{('#070a16' if dark else '#eef2ff')}"/></linearGradient>
-        <linearGradient id="ag-card" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{('#15192e' if dark else '#ffffff')}"/><stop offset="1" stop-color="{('#0e1224' if dark else '#f8fafc')}"/></linearGradient>
-        <linearGradient id="ag-green" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{green}" stop-opacity=".5"/><stop offset="1" stop-color="{green}" stop-opacity="0"/></linearGradient>
-        <linearGradient id="ag-violet" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{violet}" stop-opacity=".5"/><stop offset="1" stop-color="{violet}" stop-opacity="0"/></linearGradient>
-      </defs>
-      <rect width="1200" height="420" fill="url(#ag-stage)"/>
-      <g font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="4"><circle cx="66" cy="49" r="3.5" fill="{green}"/><text x="80" y="52" fill="{green}">LIVE · GITHUB API</text><text x="1140" y="52" text-anchor="end" fill="{muted}">PROFILE · {esc(USERNAME.upper())}</text></g>
-      <text x="60" y="100" font-family="Inter,system-ui,sans-serif" font-size="28" font-weight="700" fill="{ink}">Today, in numbers.</text>
-      <text x="60" y="124" font-family="JetBrains Mono,monospace" font-size="11" fill="{muted}" letter-spacing="2">{esc(USERNAME.upper())} · COMMITS · STREAK · PULL REQUESTS · CADENCE</text>''']
-    cards = [
-        (60, 262, "COMMITS · THIS YEAR", f"{commits:,}", "contribution commits", green),
-        (338, 262, "STREAK · CURRENT", f"{streak}d", f"→ longest {longest}d", violet),
-        (616, 262, "PULL REQUESTS · THIS YEAR", f"{pull_requests:,}", "contribution pull requests", yellow),
-        (894, 246, "PUBLIC REPOSITORIES", f"{user.get('public_repos', 0):,}", f"★ {sum(repo.get('stargazers_count', 0) for repo in repos):,} stars", cyan),
+    stage = "#08081a" if dark else "#f7f7ff"
+    card = "#0a0d1f" if dark else "#ffffff"
+    text_main = "#fef3c7" if dark else "#172033"
+    text_muted = "#94a3b8"
+    foil_stops = "#67e8f9;#f472b6;#fcd34d;#6ee7b7;#67e8f9"
+    stars = sum(repo.get("stargazers_count", 0) for repo in repos)
+    activity = metrics.get("commits", 0) + metrics.get("pull_requests", 0) + metrics.get("issues", 0)
+    rows = [
+        ("⚡ Commits this year", metrics.get("commits", 0), "#fcd34d"),
+        ("🌊 Contribution streak", f"{metrics.get('current_streak', 0)}d", "#a78bfa"),
+        ("✦ Stars earned", stars, "#67e8f9"),
     ]
-    for x, card_width, label, value, note, color in cards:
-        out.append(f'<g transform="translate({x},148)"><rect width="{card_width}" height="128" rx="12" fill="url(#ag-card)" stroke="{border}" stroke-width=".7"/><text x="18" y="32" font-family="JetBrains Mono,monospace" font-size="9" fill="{muted}" letter-spacing="3">{esc(label)}</text><text x="18" y="74" font-family="Inter,system-ui,sans-serif" font-size="34" font-weight="700" fill="{ink}">{esc(value)}</text><text x="18" y="94" font-family="JetBrains Mono,monospace" font-size="10" fill="{color}">{esc(note)}</text><rect x="18" y="112" width="{card_width-36}" height="3" rx="1.5" fill="{color}" opacity=".8"/></g>')
-    out.append(f'<g transform="translate(60,296)"><rect width="1080" height="84" rx="12" fill="url(#ag-card)" stroke="{border}" stroke-width=".7"/><text x="18" y="22" font-family="JetBrains Mono,monospace" font-size="9" fill="{muted}" letter-spacing="3">CONTRIBUTION VELOCITY · 13 WEEKS</text><polyline points="{chart_area}" fill="url(#ag-violet)"/><polyline points="{chart_points}" fill="none" stroke="{violet}" stroke-width="1.6"/><circle cx="1062" cy="{68 - (points[-1] / max_point) * 50:.1f}" r="4" fill="#fef3c7"/><text x="1062" y="74" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="9" fill="{violet}">latest · {points[-1]:,}</text></g>')
-    out.append(f'<text x="60" y="404" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="3" fill="{muted}">{esc(USERNAME.upper())} · GITHUB ANALYTICS · UPDATED BY ACTIONS</text></svg>')
+    out = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="600" height="300" role="img" aria-labelledby="holo-title holo-desc">
+      <title id="holo-title">GitHub Holographic Profile Stats</title><desc id="holo-desc">Live GitHub stats for {esc(USERNAME)}</desc>
+      <defs>
+        <linearGradient id="hfp-foil" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#67e8f9"><animate attributeName="stop-color" values="{foil_stops}" dur="10s" repeatCount="indefinite"/></stop><stop offset=".5" stop-color="#f472b6"><animate attributeName="stop-color" values="#f472b6;#fcd34d;#a78bfa;#67e8f9;#f472b6" dur="10s" repeatCount="indefinite"/></stop><stop offset="1" stop-color="#fcd34d"><animate attributeName="stop-color" values="#fcd34d;#a78bfa;#67e8f9;#f472b6;#fcd34d" dur="10s" repeatCount="indefinite"/></stop></linearGradient>
+        <linearGradient id="hfp-sheen" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <pattern id="hfp-scales" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M0,11 Q5.5,3 11,11 Q16.5,19 22,11" fill="none" stroke="#fff" stroke-width=".3" opacity=".18"/></pattern>
+        <clipPath id="hfp-clip"><rect x="60" y="40" width="480" height="220" rx="14"/></clipPath>
+      </defs>
+      <rect width="600" height="300" fill="{stage}"/><rect x="60" y="40" width="480" height="220" rx="14" fill="{card}"/>
+      <g clip-path="url(#hfp-clip)"><rect x="60" y="40" width="480" height="220" fill="url(#hfp-foil)" opacity=".42"/><rect x="60" y="40" width="480" height="220" fill="url(#hfp-scales)"/><g transform="skewX(-22)"><rect x="-200" y="-20" width="100" height="350" fill="url(#hfp-sheen)"><animate attributeName="x" values="-200;700;-200" dur="5s" repeatCount="indefinite" keyTimes="0;.7;1"/></rect></g></g>
+      <rect x="60" y="40" width="480" height="220" rx="14" fill="none" stroke="url(#hfp-foil)" stroke-width="1.5"/>
+      <text x="86" y="92" font-family="Space Grotesk,system-ui,sans-serif" font-size="24" font-weight="800" fill="{text_main}">{esc(USERNAME.upper())}</text><text x="86" y="110" font-family="JetBrains Mono,monospace" font-size="8" fill="#fcd34d" letter-spacing="3">GITHUB PROFILE · LIVE STATS</text>
+      <text x="514" y="92" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="8" fill="#fbbf24" letter-spacing="2">ACTIVITY</text><text x="514" y="116" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="21" font-weight="700" fill="{text_main}">{activity:,}</text><line x1="86" y1="124" x2="514" y2="124" stroke="url(#hfp-foil)" stroke-width=".6" opacity=".7"/>''']
+    for index, (label, value, color) in enumerate(rows):
+        y = 148 + index * 28
+        out.append(f'<g transform="translate(86,{y})"><text font-family="Space Grotesk,system-ui,sans-serif" font-size="12" font-weight="600" fill="{text_main}">{esc(label)}</text><text x="428" font-family="JetBrains Mono,monospace" font-size="10" fill="{color}" text-anchor="end">{esc(value)}</text></g>')
+    out.append(f'<line x1="86" y1="228" x2="514" y2="228" stroke="url(#hfp-foil)" stroke-width=".6" opacity=".7"/><text x="86" y="246" font-family="JetBrains Mono,monospace" font-size="7" fill="{text_muted}" letter-spacing="2">UPDATED BY GITHUB ACTIONS · {esc(USERNAME.upper())}</text><text x="514" y="246" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="7" fill="#fcd34d" letter-spacing="2">★★★★★ HOLO</text></svg>')
     return "".join(out)
 
 
