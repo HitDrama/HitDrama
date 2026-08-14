@@ -25,6 +25,28 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 scripts/generate-profile-cards.py
 
+      - name: Set up Deno for upstream trophy renderer
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Render upstream GitHub trophies
+        uses: actions/checkout@v4
+        with:
+          repository: ryo-ma/github-profile-trophy
+          path: .trophy-source
+          fetch-depth: 1
+
+      - name: Generate trophy cards from github-profile-trophy
+        env:
+          GITHUB_TOKEN1: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN2: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          deno run --allow-net --allow-env --allow-read --allow-write \
+            .trophy-source/render_svg.ts HitDrama assets/github-trophies-dark.svg dracula
+          deno run --allow-net --allow-env --allow-read --allow-write \
+            .trophy-source/render_svg.ts HitDrama assets/github-trophies-light.svg flat
+
       - name: Commit generated cards
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
