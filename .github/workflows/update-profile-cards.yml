@@ -43,6 +43,7 @@ jobs:
           GITHUB_TOKEN2: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_API: https://api.github.com/graphql
         run: |
+          sed -i 's/new Card(\[\], \[\],/new Card(["-Issues", "-Reviews"], [],/' .trophy-source/render_svg.ts
           rm -f assets/github-trophies-dark.svg assets/github-trophies-light.svg
           deno run --allow-all \
             .trophy-source/render_svg.ts HitDrama assets/github-trophies-dark.svg dracula
