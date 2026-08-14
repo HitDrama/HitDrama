@@ -90,9 +90,9 @@
 
 <h2>🏆 GitHub Trophies</h2>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/github-trophies-dark.svg?v=d81431c">
-  <source media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)" srcset="./assets/github-trophies-light.svg?v=d81431c">
-  <img alt="GitHub trophies" src="./assets/github-trophies-light.svg?v=d81431c" />
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/github-trophies-dark.svg?v=upstream-trophy">
+  <source media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)" srcset="./assets/github-trophies-light.svg?v=upstream-trophy">
+  <img alt="GitHub trophies" src="./assets/github-trophies-light.svg?v=upstream-trophy" />
 </picture>
 
 <h2 align="center">📊 GitHub Stats</h2>

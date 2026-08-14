@@ -240,7 +240,6 @@ def main() -> None:
     ASSETS.mkdir(exist_ok=True)
     user, repos, contributed, metrics = fetch_data()
     for theme in ("dark", "light"):
-        (ASSETS / f"github-trophies-{theme}.svg").write_text(card_trophies(user, repos, metrics, theme), encoding="utf-8")
         (ASSETS / f"github-stats-{theme}.svg").write_text(card_stats(user, repos, theme), encoding="utf-8")
         (ASSETS / f"github-languages-{theme}.svg").write_text(card_languages(repos, theme), encoding="utf-8")
         (ASSETS / f"github-contributions-{theme}.svg").write_text(card_contributions(user, contributed, theme), encoding="utf-8")

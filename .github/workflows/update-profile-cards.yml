@@ -41,10 +41,12 @@ jobs:
         env:
           GITHUB_TOKEN1: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN2: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_API: https://api.github.com/graphql
         run: |
-          deno run --allow-net --allow-env --allow-read --allow-write \
+          rm -f assets/github-trophies-dark.svg assets/github-trophies-light.svg
+          deno run --allow-all \
             .trophy-source/render_svg.ts HitDrama assets/github-trophies-dark.svg dracula
-          deno run --allow-net --allow-env --allow-read --allow-write \
+          deno run --allow-all \
             .trophy-source/render_svg.ts HitDrama assets/github-trophies-light.svg flat
 
       - name: Commit generated cards
