@@ -134,9 +134,13 @@ def card_trophies(user: dict, repos: list[dict], metrics: dict, theme: str) -> s
         rank = trophy_rank(value, caption)
         out.append(f'<rect x="{x}" y="{y}" width="{card_width}" height="116" rx="14" fill="{panel}" stroke="{border}" filter="url(#shadow)"/>')
         out.append(text(x + card_width / 2, y + 18, label, 10, muted, 750, "middle"))
-        out.append(f'<path d="M{x+39} {y+27}L{x+33} {y+47}L{x+44} {y+43}L{x+54} {y+47}L{x+49} {y+27}" fill="{accent}" opacity=".85"/>')
-        out.append(f'<circle cx="{x+44}" cy="{y+37}" r="16" fill="{panel}" stroke="{accent}" stroke-width="3"/>')
-        out.append(text(x + 44, y + 43, rank, 16, ink, 800, "middle"))
+        cup_x = x + 54
+        cup_y = y + 27
+        out.append(f'<path d="M{cup_x-18} {cup_y+3}H{cup_x-25}C{cup_x-25} {cup_y+14} {cup_x-19} {cup_y+19} {cup_x-12} {cup_y+19}M{cup_x+18} {cup_y+3}H{cup_x+25}C{cup_x+25} {cup_y+14} {cup_x+19} {cup_y+19} {cup_x+12} {cup_y+19}" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>')
+        out.append(f'<path d="M{cup_x-18} {cup_y}H{cup_x+18}L{cup_x+13} {cup_y+20}C{cup_x+11} {cup_y+28} {cup_x+5} {cup_y+32} {cup_x} {cup_y+32}C{cup_x-5} {cup_y+32} {cup_x-11} {cup_y+28} {cup_x-13} {cup_y+20}Z" fill="{accent}" opacity=".92"/>')
+        out.append(f'<path d="M{cup_x} {cup_y+32}V{cup_y+40}M{cup_x-9} {cup_y+43}H{cup_x+9}M{cup_x-13} {cup_y+47}H{cup_x+13}" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>')
+        out.append(f'<circle cx="{cup_x}" cy="{cup_y+14}" r="10" fill="{panel}" stroke="{accent}" stroke-width="2"/>')
+        out.append(text(cup_x, cup_y + 19, rank, 12, ink, 800, "middle"))
         out.append(text(x + card_width / 2, y + 76, f"{value:,} pt", 16, ink, 800, "middle"))
         out.append(text(x + card_width / 2, y + 94, f"{rank} rank · {value:,} points", 8, muted, 700, "middle"))
         out.append(f'<rect x="{x+16}" y="{y+105}" width="{card_width-32}" height="3" rx="1.5" fill="{accent}"/>')
