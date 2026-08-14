@@ -97,17 +97,24 @@
 
 <h2 align="center">📊 GitHub Stats</h2>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/github-stats-dark.svg">
-  <source media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)" srcset="./assets/github-stats-light.svg">
-  <img alt="GitHub statistics" src="./assets/github-stats-light.svg" />
-</picture>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/github-languages-dark.svg">
-  <source media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)" srcset="./assets/github-languages-light.svg">
-  <img alt="Top programming languages" src="./assets/github-languages-light.svg" />
-</picture>
+<table align="center" width="100%">
+  <tr>
+    <td align="center" width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./assets/github-stats-dark.svg">
+        <source media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)" srcset="./assets/github-stats-light.svg">
+        <img alt="GitHub statistics" src="./assets/github-stats-light.svg" width="390" />
+      </picture>
+    </td>
+    <td align="center" width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./assets/github-languages-dark.svg">
+        <source media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)" srcset="./assets/github-languages-light.svg">
+        <img alt="Top programming languages" src="./assets/github-languages-light.svg" width="390" />
+      </picture>
+    </td>
+  </tr>
+</table>
 
 
 
