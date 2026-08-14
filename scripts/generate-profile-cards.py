@@ -94,34 +94,54 @@ def card_stats(user: dict, repos: list[dict], theme: str) -> str:
     return "".join(out) + end
 
 
-def card_trophies(user: dict, repos: list[dict], theme: str) -> str:
+def trophy_rank(score: int, category: str) -> str:
+    thresholds = {
+        "Stars": (1000, 100, 10),
+        "Commit": (1000, 500, 100),
+        "Followers": (1000, 100, 10),
+        "Issues": (100, 50, 10),
+        "Repositories": (100, 50, 10),
+        "PullRequest": (100, 50, 10),
+    }
+    s, a, b = thresholds[category]
+    return "S" if score >= s else "A" if score >= a else "B" if score >= b else "C"
+
+
+def card_trophies(user: dict, repos: list[dict], metrics: dict, theme: str) -> str:
     width, height = 760, 270
-    start, end = shell(width, height, "GitHub Trophies", "Small milestones from a growing open-source journey", theme)
+    start, end = shell(width, height, "GitHub Trophies", "Real milestones, ranked by your strongest signals", theme)
     dark = theme == "dark"
     ink = "#e8edf7" if dark else "#172033"
     muted = "#93a4bf" if dark else "#64748b"
     panel = "#141d33" if dark else "#ffffff"
     border = "#26324b" if dark else "#dbe3ef"
-    colors = ["#f7498b", "#62e6d3", "#8b7cf6", "#f7b955", "#6ea8fe"]
     total_stars = sum(repo.get("stargazers_count", 0) for repo in repos)
-    total_forks = sum(repo.get("forks_count", 0) for repo in repos)
     trophies = [
-        ("PUBLIC BUILDER", user.get("public_repos", 0), "repositories"),
-        ("COMMUNITY", user.get("followers", 0), "followers"),
-        ("STAR COLLECTOR", total_stars, "stars earned"),
-        ("OPEN SOURCE", total_forks, "forks"),
-        ("EARLY EXPLORER", user.get("created_at", "")[:4] or "—", "joined GitHub"),
+        ("Stars", total_stars, "Stars"),
+        ("Commit", metrics.get("commits", 0), "Commit"),
+        ("Followers", user.get("followers", 0), "Followers"),
+        ("Issues", metrics.get("issues", 0), "Issues"),
+        ("Repositories", user.get("public_repos", 0), "Repositories"),
+        ("PullRequest", metrics.get("pull_requests", 0), "PullRequest"),
     ]
+    trophies = sorted((item for item in trophies if item[1] > 0), key=lambda item: item[1], reverse=True)[:6]
     out = [start]
     for index, (label, value, caption) in enumerate(trophies):
-        x = 24 + index * 143
+        x = 24 + index * 119
         y = 111
-        out.append(f'<rect x="{x}" y="{y}" width="127" height="116" rx="14" fill="{panel}" stroke="{border}" filter="url(#shadow)"/>')
-        out.append(f'<circle cx="{x+26}" cy="{y+27}" r="12" fill="{colors[index]}"/>')
-        out.append(text(x + 26, y + 31, "✦", 13, "#ffffff", 750, "middle"))
-        out.append(text(x + 14, y + 59, value, 24, ink, 750))
-        out.append(text(x + 14, y + 79, label, 9, muted, 750))
-        out.append(text(x + 14, y + 98, caption, 10, muted, 500))
+        card_width = 108
+        accent = ["#f7c95d", "#62e6d3", "#8b7cf6", "#f7498b", "#f7b955", "#6ea8fe"][index]
+        rank = trophy_rank(value, caption)
+        out.append(f'<rect x="{x}" y="{y}" width="{card_width}" height="116" rx="14" fill="{panel}" stroke="{border}" filter="url(#shadow)"/>')
+        out.append(text(x + card_width / 2, y + 18, label, 10, muted, 750, "middle"))
+        out.append(f'<path d="M{x+39} {y+27}L{x+33} {y+47}L{x+44} {y+43}L{x+54} {y+47}L{x+49} {y+27}" fill="{accent}" opacity=".85"/>')
+        out.append(f'<circle cx="{x+44}" cy="{y+37}" r="16" fill="{panel}" stroke="{accent}" stroke-width="3"/>')
+        out.append(text(x + 44, y + 43, rank, 16, ink, 800, "middle"))
+        out.append(text(x + card_width / 2, y + 76, f"{value:,} pt", 16, ink, 800, "middle"))
+        out.append(text(x + card_width / 2, y + 94, f"{rank} rank · {value:,} points", 8, muted, 700, "middle"))
+        out.append(f'<rect x="{x+16}" y="{y+105}" width="{card_width-32}" height="3" rx="1.5" fill="{accent}"/>')
+    if not trophies:
+        out.append(text(48, 175, "No trophy points yet", 16, muted, 600))
     return "".join(out) + end
 
 
@@ -179,25 +199,44 @@ def card_contributions(user: dict, contributed: list[dict], theme: str) -> str:
     return "".join(out) + end
 
 
-def fetch_data() -> tuple[dict, list[dict], list[dict]]:
+def fetch_data() -> tuple[dict, list[dict], list[dict], dict]:
     user = github(f"/users/{urllib.parse.quote(USERNAME)}")
     repos = github(f"/users/{urllib.parse.quote(USERNAME)}/repos?per_page=100&sort=updated&type=owner")
     query = """
-    query($login: String!) { user(login: $login) { repositoriesContributedTo(first: 10, includeUserRepositories: false, contributionTypes: [COMMIT, ISSUE, PULL_REQUEST, PULL_REQUEST_REVIEW]) { nodes { nameWithOwner stargazerCount } } } }
+    query($login: String!) {
+      user(login: $login) {
+        repositoriesContributedTo(first: 10, includeUserRepositories: false, contributionTypes: [COMMIT, ISSUE, PULL_REQUEST, PULL_REQUEST_REVIEW]) {
+          nodes { nameWithOwner stargazerCount }
+        }
+        contributionsCollection {
+          totalCommitContributions
+          totalIssueContributions
+          totalPullRequestContributions
+        }
+      }
+    }
     """
+    metrics = {"commits": 0, "issues": 0, "pull_requests": 0}
     try:
-        contributed = gql(query, {"login": USERNAME})["user"]["repositoriesContributedTo"]["nodes"]
+        data = gql(query, {"login": USERNAME})["user"]
+        contributed = data["repositoriesContributedTo"]["nodes"]
+        collection = data["contributionsCollection"]
+        metrics = {
+            "commits": collection.get("totalCommitContributions", 0),
+            "issues": collection.get("totalIssueContributions", 0),
+            "pull_requests": collection.get("totalPullRequestContributions", 0),
+        }
     except Exception as error:
         print(f"warning: contribution query failed: {error}", file=sys.stderr)
         contributed = []
-    return user, repos, contributed
+    return user, repos, contributed, metrics
 
 
 def main() -> None:
     ASSETS.mkdir(exist_ok=True)
-    user, repos, contributed = fetch_data()
+    user, repos, contributed, metrics = fetch_data()
     for theme in ("dark", "light"):
-        (ASSETS / f"github-trophies-{theme}.svg").write_text(card_trophies(user, repos, theme), encoding="utf-8")
+        (ASSETS / f"github-trophies-{theme}.svg").write_text(card_trophies(user, repos, metrics, theme), encoding="utf-8")
         (ASSETS / f"github-stats-{theme}.svg").write_text(card_stats(user, repos, theme), encoding="utf-8")
         (ASSETS / f"github-languages-{theme}.svg").write_text(card_languages(repos, theme), encoding="utf-8")
         (ASSETS / f"github-contributions-{theme}.svg").write_text(card_contributions(user, contributed, theme), encoding="utf-8")
